@@ -4,3 +4,9 @@
     - phenotypes (all phenotypes under selected zones, i.e phenotype_classification) 
     - phenotype_classifications to include any forgotten zone selection
 
+# TODOs:
+
+- update disorders:
+  - add description and synonyms using ordo ontology
+
+- disorders_classification script (with experts info)
