@@ -3,7 +3,7 @@ const _ = require('lodash');
 
 const config = require('../config');
 
-const { SPARQL_URL } = config;
+const { HPO_URL } = config;
 
 module.exports = class Phenotype {
   static fromDb({ HPOId, name, description, parents, directParents }) {
@@ -45,14 +45,14 @@ module.exports = class Phenotype {
     return new Promise((resolve, reject) => {
       console.log(`fetching Phenotype ${this.HPOId} ...`);
       request.post({
-        url: SPARQL_URL,
+        url: HPO_URL,
         headers: {
           'Accept': 'application/sparql-results+json'
         },
         form: { query }
       }, (err, response, body) => {
         if (err || response.statusCode !== 200) {
-          console.log(SPARQL_URL, query);
+          console.log(HPO_URL, query);
           console.log('fetching error :: ', err, body, response.statusCode);
           reject(err || body);
           return;

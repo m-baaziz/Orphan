@@ -2,7 +2,10 @@ const fs = require('fs');
 const xml2js = require('xml2js');
 const path = require('path');
 const util = require('util');
+const async = require('async');
 const MongoClient = require('mongodb').MongoClient;
+
+const Disorder = require('./models/Disorder');
 
 const config = require('./config');
 
@@ -14,13 +17,6 @@ const parseString = util.promisify(parser.parseString);
 const filename = path.join(__dirname, '../data/git_orphadata/Phenotypes associated with rare disorders/en_product4_HPO.xml');
 const url = `mongodb://${DB_HOST}:${DB_PORT}`;
 
-class Disorder {
-  constructor(orphaNumber, name, phenotypes) {
-    this.orphaNumber = orphaNumber;
-    this.name = name;
-    this.phenotypes = phenotypes;
-  }
-}
 
 
 async function main() {
@@ -36,10 +32,12 @@ async function main() {
       const disorderAssociations = disorder.HPODisorderAssociationList[0].HPODisorderAssociation;
       const phenotypes = disorderAssociations.map(associationToPhenotype);
       const orphaNumber = disorder.OrphaNumber[0];
-      const name = disorder.Name[0]._;
 
-      return new Disorder(orphaNumber, name, phenotypes);
+      return new Disorder(orphaNumber, phenotypes);
     });
+
+    console.log(`start fetching ${disorders.length} disorders`);
+    await async.eachSeries(disorders, async(disorder) => disorder.fetch());
 
     console.log('initalizing db connection ...');
     const client = await MongoClient.connect(url, {

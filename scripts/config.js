@@ -1,5 +1,8 @@
+const sparqlUrl = namespace => `http://172.17.0.2:9999/blazegraph/namespace/${namespace}/sparql`;
+
 module.exports = {
-  "SPARQL_URL": "http://172.17.0.2:9999/blazegraph/namespace/hpo/sparql",
+  "HPO_URL": sparqlUrl('hpo'),
+  "ORDO_URL": sparqlUrl('ordo'),
   "DB_HOST": process.env.DB_HOST || "localhost",
   "DB_PORT": 27017,
   "DB_NAME": "kibo",
