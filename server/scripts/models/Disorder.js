@@ -1,7 +1,7 @@
 const request = require('request');
 const _ = require('lodash');
 
-const config = require('../config');
+const config = require('../../config');
 
 const { ORDO_URL } = config;
 

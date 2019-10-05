@@ -8,7 +8,7 @@ const MongoClient = require('mongodb').MongoClient;
 
 const Disorder = require('./models/Disorder');
 
-const config = require('./config');
+const config = require('../config');
 
 const { DB_HOST, DB_PORT, DB_NAME, DISORDERS_CLASSIFICATION_COLLECTION } = config;
 
