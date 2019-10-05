@@ -7,7 +7,7 @@ module.exports = {
   "DB_PORT": 27017,
   "DB_NAME": "kibo",
   "DISORDERS_COLLECTION": "disorders",
-  "PHENOTYPE_CLASSIFICATIONS_COLLECTION": "phenotype_classifications",
   "PHENOTYPES_COLLECTION": "phenotypes",
-  "DISORDER_CLASSIFICATIONS_COLLECTION": "disorder_classifications"
+  "DISORDERS_CLASSIFICATION_COLLECTION": "disorders_classification",
+  "PHENOTYPES_CLASSIFICATION_COLLECTION": "phenotypes_classification"
 };

@@ -5,7 +5,7 @@ const MongoClient = require('mongodb').MongoClient;
 const Phenotype = require('./models/Phenotype');
 
 const config = require('./config');
-const { DB_HOST, DB_PORT, DB_NAME, PHENOTYPES_COLLECTION, PHENOTYPE_CLASSIFICATIONS_COLLECTION } = config;
+const { DB_HOST, DB_PORT, DB_NAME, PHENOTYPES_COLLECTION, PHENOTYPES_CLASSIFICATION_COLLECTION } = config;
 
 const url = `mongodb://${DB_HOST}:${DB_PORT}`;
 
@@ -18,7 +18,7 @@ async function main() {
     });
 
     const phenotypesCollection = client.db(DB_NAME).collection(PHENOTYPES_COLLECTION);
-    const classificationsCollection = client.db(DB_NAME).collection(PHENOTYPE_CLASSIFICATIONS_COLLECTION);
+    const classificationsCollection = client.db(DB_NAME).collection(PHENOTYPES_CLASSIFICATION_COLLECTION);
 
     const processParent = async(HPOId, parents) => {
       try {

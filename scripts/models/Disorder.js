@@ -25,7 +25,7 @@ module.exports = class Disorder {
       select ?label ?description ?synonym
       where {
         <http://www.orpha.net/ORDO/Orphanet_${this.orphaNumber}> rdfs:label ?label .
-        <http://www.orpha.net/ORDO/Orphanet_${this.orphaNumber}> efo:definition ?description .
+        OPTIONAL { <http://www.orpha.net/ORDO/Orphanet_${this.orphaNumber}> efo:definition ?description } .
         OPTIONAL { <http://www.orpha.net/ORDO/Orphanet_${this.orphaNumber}> efo:alternative_term ?synonym }
       }
     `;
@@ -55,7 +55,7 @@ module.exports = class Disorder {
         const { label, description, synonyms } = bindings.reduce(
           (acc, { label, description, synonym }) => ({
             label: label.value,
-            description: description.value,
+            description: description ? description.value : '',
             synonyms: synonym ? [...acc.synonyms, synonym.value] : acc.synonyms
           }),
           { label: '', description: '', synonyms: [] }

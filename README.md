@@ -6,7 +6,4 @@
 
 # TODOs:
 
-- update disorders:
-  - add description and synonyms using ordo ontology
-
 - disorders_classification script (with experts info)

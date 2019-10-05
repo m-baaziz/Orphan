@@ -7,9 +7,9 @@ const {
   DB_PORT,
   DB_NAME,
   DISORDERS_COLLECTION,
-  PHENOTYPE_CLASSIFICATIONS_COLLECTION,
+  PHENOTYPES_CLASSIFICATION_COLLECTION,
   PHENOTYPES_COLLECTION,
-  DISORDER_CLASSIFICATIONS_COLLECTION
+  DISORDERS_CLASSIFICATION_COLLECTION
 } = config;
 
 const url = `mongodb://${DB_HOST}:${DB_PORT}`;
@@ -39,13 +39,22 @@ const indexes = {
       key: { 'parents': 1 }
     }
   ],
-  [PHENOTYPE_CLASSIFICATIONS_COLLECTION]: [
+  [PHENOTYPES_CLASSIFICATION_COLLECTION]: [
     {
       key: { HPOId: 1 },
       unique: true
     },
     {
       key: { 'parents': 1 }
+    }
+  ],
+  [DISORDERS_CLASSIFICATION_COLLECTION]: [
+    {
+      key: { orphaNumber: 1 },
+      unique: true
+    },
+    {
+      key: { 'expertLink': 1 }
     }
   ]
 };
