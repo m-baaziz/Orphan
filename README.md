@@ -6,4 +6,5 @@
 
 # TODOs:
 
+- graphql client side
 - replace console.logs with real logger
