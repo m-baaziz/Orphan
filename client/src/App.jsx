@@ -7,12 +7,18 @@ import { findMainAreas } from './api/phenotypes';
 function App() {
   const [text, setText] = React.useState('');
 
-  findMainAreas().then((areas) => {
-    setText(areas);
-  })
-    .catch((e) => {
-      console.log('Error : ', e);
-    });
+  const init = () => {
+    findMainAreas()
+      .then((areas) => {
+        console.log('areas: ', areas);
+        setText('Init complete !');
+      })
+      .catch((e) => {
+        console.log('Error : ', e);
+      });
+  };
+
+  React.useEffect(init, []);
 
   return (
     <div className="App">
