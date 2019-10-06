@@ -6,4 +6,4 @@
 
 # TODOs:
 
-- disorders_classification script (with experts info)
+- replace console.logs with real logger

@@ -1,17 +1,34 @@
+const fs = require('fs');
+const path = require('path');
 const express = require('express');
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const config = require('config');
+const { buildSchema } = require('graphql');
+const graphqlHTTP = require('express-graphql');
 
 const Db = require('./lib/Db');
-
-const { findParentPhenotypes } = require('./controllers/phenotypes');
+const dev = require('./routes/dev');
+const phenotypeResolvers = require('./resolvers/phenotype');
 
 const { port: SERVER_PORT } = config.get('server');
+const ENV = config.get('env');
+
+const resolvers = {
+  ...phenotypeResolvers
+};
+const graphqlSchema = buildSchema(fs.readFileSync(path.join(__dirname, 'schema.graphql'), 'utf8'));
+const graphqlOptions = {
+  schema: graphqlSchema,
+  rootValue: resolvers,
+  graphiql: true,
+  customFormatErrorFn: ({ message, statusCode }) => ({
+    message,
+    statusCode
+  })
+};
 
 const app = express();
-const api = express.Router();
-
 app
   .use(
     bodyParser.urlencoded({
@@ -20,15 +37,31 @@ app
   )
   .use(bodyParser.json())
   .use(morgan('combined'))
-  .use('/api', api);
+  .use(
+    '/dev',
+    ENV === 'dev'
+      ? dev
+      : (req, res) => {
+          res.status(403).send('Unauthorized');
+        }
+  );
 
-api.get('/areas', findParentPhenotypes);
+app.use('/graphql', graphqlHTTP(graphqlOptions));
 
-Db.init()
+async function init() {
+  try {
+    await Db.init();
+    return Promise.resolve();
+  } catch (e) {
+    return Promise.reject(e);
+  }
+}
+
+init()
   .then(() => {
     app.listen(SERVER_PORT);
   })
   .catch(e => {
-    console.log('Error while initializing Db: ', e);
+    console.log('Error while initializing server: ', e);
     process.exit(0);
   });

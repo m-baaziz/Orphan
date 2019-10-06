@@ -1,3 +1,4 @@
+env: ENV
 server:
   port: SERVER_PORT
 database:

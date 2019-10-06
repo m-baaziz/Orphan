@@ -1,0 +1,9 @@
+type Query {
+  ParentPhenotypes: [Phenotype]
+}
+
+type Phenotype {
+  HPOId: String,
+  name: String,
+  description: String
+}
