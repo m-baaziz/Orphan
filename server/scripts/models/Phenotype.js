@@ -1,9 +1,9 @@
 const request = require('request');
 const _ = require('lodash');
 
-const config = require('../../config');
+const config = require('config');
 
-const { HPO_URL } = config;
+const HPO_URL = config.get('sparql').hpo;
 
 module.exports = class Phenotype {
   static fromDb({ HPOId, name, description, parents, directParents }) {
@@ -44,36 +44,43 @@ module.exports = class Phenotype {
     `;
     return new Promise((resolve, reject) => {
       console.log(`fetching Phenotype ${this.HPOId} ...`);
-      request.post({
-        url: HPO_URL,
-        headers: {
-          'Accept': 'application/sparql-results+json'
+      request.post(
+        {
+          url: HPO_URL,
+          headers: {
+            Accept: 'application/sparql-results+json'
+          },
+          form: { query }
         },
-        form: { query }
-      }, (err, response, body) => {
-        if (err || response.statusCode !== 200) {
-          console.log(HPO_URL, query);
-          console.log('fetching error :: ', err, body, response.statusCode);
-          reject(err || body);
-          return;
-        }
-        console.log(`fetched Phenotype ${this.HPOId}`);
-        const { results: { bindings } } = JSON.parse(body);
-        
-        if (bindings.length === 0) {
-          resolve();
-          return;
-        }
-        
-        this.name = bindings[0].label.value;
-        this.description = _.has(bindings[0], 'description.value') ? bindings[0].description.value : this.description;
-        this.immediateParents = bindings.map(b => {
-          const chunks = b.parent.value.split('/');
-          return chunks[chunks.length - 1].replace('_', ':');
-        });
+        (err, response, body) => {
+          if (err || response.statusCode !== 200) {
+            console.log(HPO_URL, query);
+            console.log('fetching error :: ', err, body, response.statusCode);
+            reject(err || body);
+            return;
+          }
+          console.log(`fetched Phenotype ${this.HPOId}`);
+          const {
+            results: { bindings }
+          } = JSON.parse(body);
 
-        resolve();
-      });
+          if (bindings.length === 0) {
+            resolve();
+            return;
+          }
+
+          this.name = bindings[0].label.value;
+          this.description = _.has(bindings[0], 'description.value')
+            ? bindings[0].description.value
+            : this.description;
+          this.immediateParents = bindings.map(b => {
+            const chunks = b.parent.value.split('/');
+            return chunks[chunks.length - 1].replace('_', ':');
+          });
+
+          resolve();
+        }
+      );
     });
   }
-}
+};

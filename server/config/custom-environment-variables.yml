@@ -1,0 +1,6 @@
+server:
+  port: SERVER_PORT
+database:
+  host: DB_HOST
+  port: DB_PORT
+  db: DB_DATABASE_NAME

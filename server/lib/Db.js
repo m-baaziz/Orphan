@@ -1,13 +1,17 @@
+const config = require('config');
 const { MongoClient } = require('mongodb');
+
 const {
-  DB_HOST,
-  DB_PORT,
-  DB_NAME,
-  DISORDERS_COLLECTION,
-  PHENOTYPES_COLLECTION,
-  DISORDERS_CLASSIFICATION_COLLECTION,
-  PHENOTYPES_CLASSIFICATION_COLLECTION,
-} = require('../config');
+  host: DB_HOST,
+  port: DB_PORT,
+  db: DB_NAME,
+  collections: {
+    phenotypes: PHENOTYPES_COLLECTION,
+    phenotypes_classification: PHENOTYPES_CLASSIFICATION_COLLECTION,
+    disorders: DISORDERS_COLLECTION,
+    disorders_classification: DISORDERS_CLASSIFICATION_COLLECTION
+  }
+} = config.get('database');
 
 const instance = null;
 
@@ -28,19 +32,12 @@ class Db {
     try {
       console.log('initalizing db ...');
 
-      this.client = await MongoClient.connect(
-        `mongodb://${DB_HOST}:${DB_PORT}`,
-        {
-          useNewUrlParser: true,
-          useUnifiedTopology: true,
-        },
-      );
-      this.disordersCollection = this.client
-        .db(DB_NAME)
-        .collection(DISORDERS_COLLECTION);
-      this.phenotypesCollection = this.client
-        .db(DB_NAME)
-        .collection(PHENOTYPES_COLLECTION);
+      this.client = await MongoClient.connect(`mongodb://${DB_HOST}:${DB_PORT}`, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true
+      });
+      this.disordersCollection = this.client.db(DB_NAME).collection(DISORDERS_COLLECTION);
+      this.phenotypesCollection = this.client.db(DB_NAME).collection(PHENOTYPES_COLLECTION);
       this.disordersClassificationCollection = this.client
         .db(DB_NAME)
         .collection(DISORDERS_CLASSIFICATION_COLLECTION);

@@ -2,9 +2,7 @@ const Db = require('../lib/Db');
 
 async function findParentPhenotypes(req, res) {
   try {
-    const phenotypes = await Db.phenotypes
-      .find({ directParents: 'HP:0000118' })
-      .toArray();
+    const phenotypes = await Db.phenotypes.find({ directParents: 'HP:0000118' }).toArray();
 
     res.json(phenotypes);
   } catch (e) {

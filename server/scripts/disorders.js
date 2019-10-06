@@ -3,21 +3,34 @@ const xml2js = require('xml2js');
 const path = require('path');
 const util = require('util');
 const async = require('async');
-const MongoClient = require('mongodb').MongoClient;
+const config = require('config');
+const { MongoClient } = require('mongodb');
 
 const Disorder = require('./models/Disorder');
 
-const config = require('../config');
-
-const { DB_HOST, DB_PORT, DB_NAME, DISORDERS_COLLECTION } = config;
+const {
+  host: DB_HOST,
+  port: DB_PORT,
+  db: DB_NAME,
+  collections: { disorders: DISORDERS_COLLECTION }
+} = config.get('database');
 
 const parser = new xml2js.Parser();
 const readFile = util.promisify(fs.readFile);
 const parseString = util.promisify(parser.parseString);
-const filename = path.join(__dirname, '../data/git_orphadata/Phenotypes associated with rare disorders/en_product4_HPO.xml');
+const filename = path.join(
+  __dirname,
+  '../data/git_orphadata/Phenotypes associated with rare disorders/en_product4_HPO.xml'
+);
 const url = `mongodb://${DB_HOST}:${DB_PORT}`;
 
-
+function associationToPhenotype(association) {
+  return {
+    HPOId: association.HPO[0].HPOId[0],
+    name: association.HPO[0].HPOTerm[0],
+    frequency: association.HPOFrequency[0].Name[0]._
+  };
+}
 
 async function main() {
   try {
@@ -37,7 +50,7 @@ async function main() {
     });
 
     console.log(`start fetching ${disorders.length} disorders`);
-    await async.eachSeries(disorders, async(disorder) => disorder.fetch());
+    await async.eachSeries(disorders, async disorder => disorder.fetch());
 
     console.log('initalizing db connection ...');
     const client = await MongoClient.connect(url, {
@@ -51,23 +64,15 @@ async function main() {
       upsert: true
     });
     console.log(`successfully inserted ${disorders.length} documents`);
-
-  } catch(e) {
+  } catch (e) {
     console.log('ERROR: ', e);
   }
 }
 
-
-function associationToPhenotype(association) {
-  return {
-    'HPOId': association.HPO[0].HPOId[0],
-    'name': association.HPO[0].HPOTerm[0],
-    'frequency': association.HPOFrequency[0].Name[0]._
-  }
-}
-
-main().then(() => {
-  process.exit(1);
-}).catch(e => {
-  process.exit(0)
-});
+main()
+  .then(() => {
+    process.exit(1);
+  })
+  .catch(() => {
+    process.exit(0);
+  });

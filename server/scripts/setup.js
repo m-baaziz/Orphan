@@ -1,16 +1,17 @@
-const MongoClient = require('mongodb').MongoClient;
-
-const config = require('../config');
+const config = require('config');
+const { MongoClient } = require('mongodb');
 
 const {
-  DB_HOST,
-  DB_PORT,
-  DB_NAME,
-  DISORDERS_COLLECTION,
-  PHENOTYPES_CLASSIFICATION_COLLECTION,
-  PHENOTYPES_COLLECTION,
-  DISORDERS_CLASSIFICATION_COLLECTION
-} = config;
+  host: DB_HOST,
+  port: DB_PORT,
+  db: DB_NAME,
+  collections: {
+    phenotypes: PHENOTYPES_COLLECTION,
+    phenotypes_classification: PHENOTYPES_CLASSIFICATION_COLLECTION,
+    disorders: DISORDERS_COLLECTION,
+    disorders_classification: DISORDERS_CLASSIFICATION_COLLECTION
+  }
+} = config.get('database');
 
 const url = `mongodb://${DB_HOST}:${DB_PORT}`;
 
@@ -30,13 +31,13 @@ const indexes = {
       unique: true
     },
     {
-      key: { 'name': 1 }
+      key: { name: 1 }
     },
     {
-      key: { 'description': 1 }
+      key: { description: 1 }
     },
     {
-      key: { 'parents': 1 }
+      key: { parents: 1 }
     }
   ],
   [PHENOTYPES_CLASSIFICATION_COLLECTION]: [
@@ -45,7 +46,7 @@ const indexes = {
       unique: true
     },
     {
-      key: { 'parents': 1 }
+      key: { parents: 1 }
     }
   ],
   [DISORDERS_CLASSIFICATION_COLLECTION]: [
@@ -54,11 +55,10 @@ const indexes = {
       unique: true
     },
     {
-      key: { 'expertLink': 1 }
+      key: { expertLink: 1 }
     }
   ]
 };
-
 
 async function main() {
   try {
@@ -70,21 +70,24 @@ async function main() {
 
     const collections = Object.keys(indexes);
 
-    await Promise.all(collections.map(async(collectionName) => {
-      console.log('creating index for collection ', collectionName);
-      const collection = client.db(DB_NAME).collection(collectionName);
-      return collection.createIndexes(indexes[collectionName]);
-    }));
+    await Promise.all(
+      collections.map(async collectionName => {
+        console.log('creating index for collection ', collectionName);
+        const collection = client.db(DB_NAME).collection(collectionName);
+        return collection.createIndexes(indexes[collectionName]);
+      })
+    );
 
     console.log('indexes successfully created');
-  } catch(e) {
+  } catch (e) {
     console.log('setup ERROR : ', e);
   }
-  return;
 }
 
-main().then(() => {
-  process.exit(1);
-}).catch(e => {
-  process.exit(0)
-});
+main()
+  .then(() => {
+    process.exit(1);
+  })
+  .catch(() => {
+    process.exit(0);
+  });

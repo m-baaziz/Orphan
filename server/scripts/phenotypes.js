@@ -1,11 +1,15 @@
-const request = require('request');
 const async = require('async');
-const MongoClient = require('mongodb').MongoClient;
+const config = require('config');
+const { MongoClient } = require('mongodb');
 
 const Phenotype = require('./models/Phenotype');
 
-const config = require('../config');
-const { DB_HOST, DB_PORT, DB_NAME, DISORDERS_COLLECTION, PHENOTYPES_COLLECTION } = config;
+const {
+  host: DB_HOST,
+  port: DB_PORT,
+  db: DB_NAME,
+  collections: { disorders: DISORDERS_COLLECTION, phenotypes: PHENOTYPES_COLLECTION }
+} = config.get('database');
 
 const url = `mongodb://${DB_HOST}:${DB_PORT}`;
 
@@ -23,15 +27,15 @@ async function main() {
     const disorders = await disordersCollection.find().toArray();
 
     console.log(`processing ${disorders.length} disorders ...`);
-    await async.eachSeries(disorders, async(disorder) => {
+    await async.eachSeries(disorders, async disorder => {
       try {
         console.log(`creating ${disorder.phenotypes.length} phenotypes ...`);
-        const phenotypes = await async.mapSeries(disorder.phenotypes, async({ HPOId }) => {
+        const phenotypes = await async.mapSeries(disorder.phenotypes, async ({ HPOId }) => {
           try {
             const phenotype = new Phenotype(HPOId);
             await phenotype.fetch();
             return Promise.resolve(phenotype);
-          } catch(e) {
+          } catch (e) {
             return Promise.reject(e);
           }
         });
@@ -40,7 +44,7 @@ async function main() {
           await phenotypesCollection.insertMany(phenotypes, {
             ordered: false
           });
-        } catch(mongoError) {
+        } catch (mongoError) {
           // if not simple duplicate error
           if (mongoError.code !== 11000) {
             return Promise.reject(mongoError);
@@ -48,20 +52,20 @@ async function main() {
         }
         console.log(`successfully saved ${disorder.phenotypes.length} phenotypes ...`);
         return Promise.resolve();
-      } catch(e) {
+      } catch (e) {
         return Promise.reject(e);
       }
     });
-    console.log('successfully saved all phenotypes')
-  } catch(e) {
+    console.log('successfully saved all phenotypes');
+  } catch (e) {
     console.log('ERROR: ', e);
   }
 }
 
-
-
-main().then(() => {
-  process.exit(1);
-}).catch(e => {
-  process.exit(0)
-});
+main()
+  .then(() => {
+    process.exit(1);
+  })
+  .catch(() => {
+    process.exit(0);
+  });

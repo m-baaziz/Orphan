@@ -1,0 +1,14 @@
+server:
+  port: 8080
+database:
+  host: localhost
+  port: 27017
+  db: kibo
+  collections:
+    disorders: disorders
+    phenotypes: phenotypes
+    disorders_classification: disorders_classification
+    phenotypes_classification: phenotypes_classification
+sparql:
+  hpo: http://172.17.0.2:9999/blazegraph/namespace/hpo/sparql
+  ordo: http://172.17.0.2:9999/blazegraph/namespace/ordo/sparql

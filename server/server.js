@@ -1,12 +1,13 @@
 const express = require('express');
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
+const config = require('config');
 
 const Db = require('./lib/Db');
 
 const { findParentPhenotypes } = require('./controllers/phenotypes');
 
-const { SERVER_PORT } = process.env;
+const { port: SERVER_PORT } = config.get('server');
 
 const app = express();
 const api = express.Router();
@@ -14,8 +15,8 @@ const api = express.Router();
 app
   .use(
     bodyParser.urlencoded({
-      extended: true,
-    }),
+      extended: true
+    })
   )
   .use(bodyParser.json())
   .use(morgan('combined'))
@@ -27,7 +28,7 @@ Db.init()
   .then(() => {
     app.listen(SERVER_PORT);
   })
-  .catch((e) => {
+  .catch(e => {
     console.log('Error while initializing Db: ', e);
     process.exit(0);
   });
