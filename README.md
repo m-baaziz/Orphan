@@ -9,3 +9,4 @@
 - graphql client side
 - replace console.logs with real logger
 - init material-ui
+- graphql connection model to support pagination

@@ -15,5 +15,5 @@ async function findParentPhenotypes() {
 }
 
 module.exports = {
-  ParentPhenotypes: findParentPhenotypes
+  parentPhenotypes: findParentPhenotypes
 };
