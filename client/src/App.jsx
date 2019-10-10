@@ -1,34 +1,58 @@
 import React from 'react';
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+} from 'react-router-dom';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import { createMuiTheme, withStyles } from '@material-ui/core/styles';
+import { ThemeProvider } from '@material-ui/styles';
+import blue from '@material-ui/core/colors/blue';
+import orange from '@material-ui/core/colors/orange';
 
-import logo from './logo.svg';
-import './App.css';
+import AppBar from './components/AppBar';
 
-import ParentPhenotypes from './components/ParentPhenotypes';
 
-function App() {
+import Home from './views/Home';
+
+const theme = createMuiTheme({
+  palette: {
+    primary: blue,
+    secondary: orange,
+  },
+});
+
+const styles = () => ({
+  root: {
+    display: 'flex',
+  },
+  content: {
+    flexGrow: 1,
+    height: '100vh',
+    overflow: 'auto',
+  },
+  appBarSpacer: theme.mixins.toolbar,
+});
+
+function App(props) {
+  const { classes } = props;
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit
-          {' '}
-          <code>src/App.js</code>
-          {' '}
-          and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-      <ParentPhenotypes />
-    </div>
+    <ThemeProvider theme={theme}>
+      <div>
+        <CssBaseline />
+        <AppBar />
+        <main className={classes.content}>
+          <div className={classes.appBarSpacer} />
+          <Router>
+            <Switch>
+              <Route path="/" exact component={Home} />
+            </Switch>
+          </Router>
+        </main>
+      </div>
+    </ThemeProvider>
   );
 }
 
-export default App;
+export default withStyles(styles)(App);

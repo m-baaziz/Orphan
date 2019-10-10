@@ -23,6 +23,7 @@
     ],
     "rules": {
         "react/jsx-one-expression-per-line": 0,
-        "max-len": [2, { "code": 150 }]
+        "max-len": [2, { "code": 150 }],
+        "react/prop-types": 0
     }
 }
