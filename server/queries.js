@@ -77,6 +77,7 @@ async function computeDisordersMap(phenotypes, comment) {
             ? [...disordersMap[orphaNumber], phenotypeWithComment(phenotype)]
             : [];
         });
+        return Promise.resolve();
       } catch (e) {
         return Promise.reject(e);
       }

@@ -10,3 +10,4 @@
 - replace console.logs with real logger
 - init material-ui
 - graphql connection model to support pagination
+- in scripts: prepared queries / string escaping to be robust against invalid characters / mongo injection

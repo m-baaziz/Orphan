@@ -1,13 +1,10 @@
 const createError = require('http-errors');
 
-const Db = require('../lib/Db');
+const { findPhenotypesByDirectParent } = require('../lib/phenotype');
 
-async function findParentPhenotypes() {
+async function parentPhenotypes() {
   try {
-    const phenotypes = await Db.phenotypesClassification
-      .find({ directParents: 'HP:0000118' })
-      .toArray();
-    return phenotypes;
+    return await findPhenotypesByDirectParent('HP:0000118');
   } catch (e) {
     console.log('Error while fetching main phenotypes: ', e);
     return createError(500, 'Error while fetching main phenotypes');
@@ -15,5 +12,5 @@ async function findParentPhenotypes() {
 }
 
 module.exports = {
-  parentPhenotypes: findParentPhenotypes
+  parentPhenotypes
 };

@@ -11,9 +11,8 @@ import blue from '@material-ui/core/colors/blue';
 import orange from '@material-ui/core/colors/orange';
 
 import AppBar from './components/AppBar';
-
-
 import Home from './views/Home';
+import Disorders from './views/Disorders';
 
 const theme = createMuiTheme({
   palette: {
@@ -27,6 +26,8 @@ const styles = () => ({
     display: 'flex',
   },
   content: {
+    display: 'flex',
+    flexDirection: 'column',
     flexGrow: 1,
     height: '100vh',
     overflow: 'auto',
@@ -39,18 +40,19 @@ function App(props) {
 
   return (
     <ThemeProvider theme={theme}>
-      <div>
-        <CssBaseline />
-        <AppBar />
-        <main className={classes.content}>
-          <div className={classes.appBarSpacer} />
-          <Router>
+      <Router>
+        <div>
+          <CssBaseline />
+          <AppBar />
+          <main className={classes.content}>
+            <div className={classes.appBarSpacer} />
             <Switch>
               <Route path="/" exact component={Home} />
+              <Route path="/disorders" component={Disorders} />
             </Switch>
-          </Router>
-        </main>
-      </div>
+          </main>
+        </div>
+      </Router>
     </ThemeProvider>
   );
 }

@@ -1,9 +1,26 @@
 type Query {
   parentPhenotypes: [Phenotype]
+  matchDisorders(statements: [Statement]): [DisorderWithScore]
 }
 
 type Phenotype {
   HPOId: ID,
   name: String,
   description: String
+}
+
+type Disorder {
+  orphaNumber: String,
+  name: String,
+  description: String
+}
+
+type DisorderWithScore {
+  disorder: Disorder,
+  score: Int
+}
+
+input Statement {
+  area: String,
+  comment: String
 }

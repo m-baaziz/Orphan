@@ -9,6 +9,7 @@
     "babel-plugin-relay": "^6.0.0",
     "lodash": "^4.17.15",
     "prop-types": "^15.7.2",
+    "query-string": "^6.8.3",
     "react": "^16.10.2",
     "react-dom": "^16.10.2",
     "react-relay": "^6.0.0",

@@ -10,12 +10,14 @@ const graphqlHTTP = require('express-graphql');
 const Db = require('./lib/Db');
 const dev = require('./routes/dev');
 const phenotypeResolvers = require('./resolvers/phenotype');
+const disorderResolvers = require('./resolvers/disorder');
 
 const { port: SERVER_PORT } = config.get('server');
 const ENV = config.get('env');
 
 const resolvers = {
-  ...phenotypeResolvers
+  ...phenotypeResolvers,
+  ...disorderResolvers
 };
 const graphqlSchema = buildSchema(fs.readFileSync(path.join(__dirname, 'schema.graphql'), 'utf8'));
 const graphqlOptions = {

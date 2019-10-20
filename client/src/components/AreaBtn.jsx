@@ -8,9 +8,9 @@ const styles = (theme) => ({
   },
 });
 
-function ParentPhenotypeBtn(props) {
+function AreaBtn(props) {
   const {
-    classes, HPOId, name, description, active, onClick,
+    classes, area: { HPOId, name, description }, active, onClick,
   } = props;
 
   const onClickHander = (event) => {
@@ -27,4 +27,4 @@ function ParentPhenotypeBtn(props) {
   );
 }
 
-export default withStyles(styles)(ParentPhenotypeBtn);
+export default withStyles(styles)(AreaBtn);
