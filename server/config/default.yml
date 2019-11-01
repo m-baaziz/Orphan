@@ -13,3 +13,8 @@ database:
 sparql:
   hpo: http://172.17.0.2:9999/blazegraph/namespace/hpo/sparql
   ordo: http://172.17.0.2:9999/blazegraph/namespace/ordo/sparql
+nlp:
+  host: localhost
+  port: 5000
+  results_size: 2
+

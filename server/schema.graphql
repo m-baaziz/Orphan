@@ -17,7 +17,7 @@ type Disorder {
 
 type DisorderWithScore {
   disorder: Disorder,
-  score: Int
+  score: Float
 }
 
 input Statement {

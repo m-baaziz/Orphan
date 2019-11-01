@@ -2,7 +2,6 @@ const _ = require('lodash');
 const async = require('async');
 
 const Db = require('./Db');
-const { computePhenotypeScore } = require('./phenotype');
 
 function findDisorder(orphaNumber) {
   return Db.disorders.findOne({ orphaNumber });
@@ -12,21 +11,21 @@ function filterDisorders(HPOId) {
   return Db.disorders.find({ 'phenotypes.HPOId': HPOId }).toArray();
 }
 
-async function computeDisordersScoreMap(phenotypes, comment) {
+async function computeDisordersScoreMap(phenotypesWithScore, comment) {
   // map of related disorders with associated phenotypes used to find them + scores
   try {
     const scoresMap = {};
     const disordersMap = {};
-    const phenotypeWithComment = phenotype => ({ ...phenotype, comment });
-    await async.eachSeries(phenotypes, async phenotype => {
+
+    await async.eachSeries(phenotypesWithScore, async phenotypeWithScore => {
       try {
-        const disorders = await filterDisorders(phenotype.HPOId);
+        const { HPOId, score } = phenotypeWithScore;
+        console.log('ITEM:: ', phenotypeWithScore);
+        const disorders = await filterDisorders(HPOId);
         disorders.forEach(disorder => {
           const { orphaNumber } = disorder;
           disordersMap[orphaNumber] = disorder;
-          scoresMap[orphaNumber] = scoresMap[orphaNumber]
-            ? [...scoresMap[orphaNumber], phenotypeWithComment(phenotype)]
-            : [];
+          scoresMap[orphaNumber] = [...(scoresMap[orphaNumber] || []), { HPOId, score, comment }];
         });
         return Promise.resolve();
       } catch (e) {
@@ -40,9 +39,7 @@ async function computeDisordersScoreMap(phenotypes, comment) {
 }
 
 function interStatementDisorderScoreUpdate(lastScore, keyPhenotypes) {
-  const incomingScore = _.sum(
-    keyPhenotypes.map(keyPhenotype => computePhenotypeScore(keyPhenotype, keyPhenotype.comment))
-  );
+  const incomingScore = _.sum(keyPhenotypes.map(({ score }) => score));
   return lastScore * (incomingScore || 1);
 }
 

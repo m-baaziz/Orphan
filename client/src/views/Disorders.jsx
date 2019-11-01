@@ -12,6 +12,9 @@ const styles = () => ({
     padding: 10,
     flexGrow: 1,
   },
+  tableContainer: {
+    padding: 50,
+  },
 });
 
 function DisordersScores(props) {
@@ -28,7 +31,7 @@ function DisordersScores(props) {
 
   return (
     <Paper className={classes.root}>
-      <div>
+      <div className={classes.tableContainer}>
         <DisordersWithScoresTable statements={statements} />
       </div>
     </Paper>

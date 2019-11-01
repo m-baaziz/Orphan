@@ -2,16 +2,17 @@ const _ = require('lodash');
 const async = require('async');
 const createError = require('http-errors');
 
-const { filterPhenotypes } = require('../lib/phenotype');
+const { fetchPhenotypesWithScore } = require('../lib/phenotype');
 const { computeDisordersScoreMap, interStatementDisorderScoreUpdate } = require('../lib/disorder');
 
 async function matchDisorders({ statements }) {
   try {
     let disordersMaps = {};
-    const scoresMaps = await async.mapSeries(statements, async ({ area, comment }) => {
+    const scoresMaps = await async.mapSeries(statements, async ({ area: parentHPOId, comment }) => {
       try {
-        const phenotypes = await filterPhenotypes(area, comment);
-        const [scores, disorders] = await computeDisordersScoreMap(phenotypes, comment);
+        const phenotypesWithScore = await fetchPhenotypesWithScore(parentHPOId, comment);
+        console.log('PHENOTYPES WITH SCORE :: ', phenotypesWithScore);
+        const [scores, disorders] = await computeDisordersScoreMap(phenotypesWithScore, comment);
         disordersMaps = { ...disordersMaps, ...disorders };
         return scores;
       } catch (e) {
@@ -33,8 +34,8 @@ async function matchDisorders({ statements }) {
       score: disordersScores[orphaNumber]
     }));
   } catch (e) {
-    console.log('Error while fetching main phenotypes: ', e);
-    return createError(500, 'Error while fetching main phenotypes');
+    console.log('Error while computing disorders match: ', e);
+    return createError(500, `Error while computing disorders match: ${e}`);
   }
 }
 

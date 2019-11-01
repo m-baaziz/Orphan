@@ -1,3 +1,6 @@
+const request = require('request');
+const config = require('config');
+
 const Db = require('./Db');
 
 function findPhenotypesByDirectParent(directParent) {
@@ -13,12 +16,26 @@ function filterPhenotypes(parentHPOId, text) {
     .toArray();
 }
 
-// eslint-disable-next-line no-unused-vars
-function computePhenotypeScore(phenotype, text) {
-  // should be >= 1
-  return 1;
+async function fetchPhenotypesWithScore(parentHPOId, statement) {
+  const { host, port, results_size: resultsSize } = config.get('nlp');
+  return new Promise((resolve, reject) => {
+    request.get(
+      `http://${host}:${port}/scores?search=${statement}&parentHPOId=${parentHPOId}&size=${resultsSize}`,
+      (error, response, body) => {
+        if (response.statusCode !== 200 || error) {
+          return reject(error || body);
+        }
+        try {
+          const { scores } = JSON.parse(body);
+          return resolve(scores);
+        } catch (e) {
+          return reject(e);
+        }
+      }
+    );
+  });
 }
 
 exports.findPhenotypesByDirectParent = findPhenotypesByDirectParent;
 exports.filterPhenotypes = filterPhenotypes;
-exports.computePhenotypeScore = computePhenotypeScore;
+exports.fetchPhenotypesWithScore = fetchPhenotypesWithScore;

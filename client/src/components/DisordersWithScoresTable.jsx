@@ -8,10 +8,10 @@ import Table from './Table';
 const styles = () => ({});
 
 function DisordersWithScoresTable(props) {
-  const { classes, disordersWithScores } = props;
+  const { disordersWithScores } = props;
   return (
     <Table
-      items={disordersWithScores}
+      items={disordersWithScores || []}
       cols={{
         orphaNumber: ({ disorder: { orphaNumber } }) => orphaNumber,
         name: ({ disorder: { name } }) => name,

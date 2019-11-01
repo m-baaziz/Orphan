@@ -24,10 +24,12 @@ const graphqlOptions = {
   schema: graphqlSchema,
   rootValue: resolvers,
   graphiql: true,
-  customFormatErrorFn: ({ message, statusCode }) => ({
-    message,
-    statusCode
-  })
+  customFormatErrorFn: ({ message, statusCode }) => {
+    return {
+      message,
+      statusCode
+    };
+  }
 };
 
 const app = express();

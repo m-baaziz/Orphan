@@ -1,6 +1,5 @@
 import np
 import nltk
-import scipy.spatial
 from bert_serving.client import BertClient
 from string import punctuation
 from nltk.corpus import stopwords
@@ -48,13 +47,3 @@ def sentence_embeddings(text):
             text.split('.')
         ))))
     )
-    
-def distance(sentence1, sentence2):
-    sentence_embeddings_1 = sentence_embeddings(sentence1)
-    sentence_embeddings_2 = sentence_embeddings(sentence2)
-    distances = []
-    for s1 in sentence_embeddings_1:
-        for s2 in sentence_embeddings_2:
-            distances.append(scipy.spatial.distance.cosine(s1, s2))
-                
-    return np.mean(distances)
