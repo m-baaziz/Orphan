@@ -35,7 +35,7 @@ def spellcheck(text):
     return ' '.join([spell(w) for w in (nltk.word_tokenize(text))])
 
 def clean_text(text):
-    return spellcheck(stem(lemmatize(remove_stop_words(strip_punctuation(text.lower())))))
+    return spellcheck(stem(lemmatize(strip_punctuation(text.lower()))))
 
 
 def sentence_embeddings(text):
