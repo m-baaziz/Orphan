@@ -7,6 +7,10 @@ import Table from './Table';
 
 const styles = () => ({});
 
+function round(num, digits = 2) {
+  return +num.toFixed(digits);
+}
+
 function DisordersWithScoresTable(props) {
   const { disordersWithScores } = props;
   return (
@@ -16,7 +20,7 @@ function DisordersWithScoresTable(props) {
         orphaNumber: ({ disorder: { orphaNumber } }) => orphaNumber,
         name: ({ disorder: { name } }) => name,
         description: ({ disorder: { description } }) => description,
-        score: ({ score }) => score,
+        score: ({ score }) => round(score),
       }}
     />
   );

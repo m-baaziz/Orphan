@@ -11,7 +11,6 @@ async function matchDisorders({ statements }) {
     const scoresMaps = await async.mapSeries(statements, async ({ area: parentHPOId, comment }) => {
       try {
         const phenotypesWithScore = await fetchPhenotypesWithScore(parentHPOId, comment);
-        console.log('PHENOTYPES WITH SCORE :: ', phenotypesWithScore);
         const [scores, disorders] = await computeDisordersScoreMap(phenotypesWithScore, comment);
         disordersMaps = { ...disordersMaps, ...disorders };
         return scores;
@@ -29,9 +28,14 @@ async function matchDisorders({ statements }) {
       orphaNumber => -disordersScores[orphaNumber]
     ]);
 
+    const max = disordersScores[sortedDisorders[0]];
+    const min = disordersScores[_.last(sortedDisorders)];
+
+    const normalize = score => (100 * (score - min)) / (max - min);
+
     return sortedDisorders.map(orphaNumber => ({
       disorder: disordersMaps[orphaNumber],
-      score: disordersScores[orphaNumber]
+      score: normalize(disordersScores[orphaNumber])
     }));
   } catch (e) {
     console.log('Error while computing disorders match: ', e);
