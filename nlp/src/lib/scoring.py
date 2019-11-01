@@ -26,7 +26,8 @@ def compute_scores(parent_hpoid, search, threshold):
     for phenotype in phenotypes.find():
         if not phenotype['embeddings']:
             continue
-        distance = min(map(lambda x: embeddings_distance(search_embedding, x), phenotype['embeddings']))
+        distances = list(map(lambda x: embeddings_distance(search_embedding, x), phenotype['embeddings']))
+        distance = sum(distances)/len(distances)
         score = 1/distance
 
         if score > threshold:

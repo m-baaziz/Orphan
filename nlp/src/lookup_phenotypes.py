@@ -17,7 +17,7 @@ def invalid_request(e):
 @app.route('/scores', methods=['GET'])
 def hello_world():
     try:
-        threshold = int(request.args.get('threshold', DEFAULT_THRESHOLD))
+        threshold = float(request.args.get('threshold', DEFAULT_THRESHOLD))
     except Exception as e:
         abort(400, description="invalid threshold parameter")
 
