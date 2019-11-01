@@ -16,5 +16,18 @@ sparql:
 nlp:
   host: localhost
   port: 5000
-  results_size: 2
+scoring:
+  threshold: 5
+  results_size: 5
+  frequency_factors:
+    - label: Obligate (100%)
+      value: 100
+    - label: Very frequent (99-80%)
+      value: 90
+    - label: Frequent (79-30%)
+      value: 55
+    - label: Occasional (29-5%)
+      value: 17
+    - label: Very rare (<4-1%)
+      value: 2
 

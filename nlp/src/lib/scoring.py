@@ -1,5 +1,4 @@
 import scipy.spatial
-from heapq import heappush, heappop
 from pymongo import MongoClient
 from lib.encoding import sentence_embeddings
 
@@ -20,7 +19,7 @@ def sentences_distance(sentence1, sentence2):
                 
     return np.mean(distances)
 
-def compute_scores(parent_hpoid, search, size):
+def compute_scores(parent_hpoid, search, threshold):
     scores = []
     search_embedding = sentence_embeddings(search).tolist()
     gen = phenotypes.find({'parents': parent_hpoid}) if parent_hpoid else phenotypes.find()
@@ -28,9 +27,9 @@ def compute_scores(parent_hpoid, search, size):
         if not phenotype['embeddings']:
             continue
         distance = min(map(lambda x: embeddings_distance(search_embedding, x), phenotype['embeddings']))
-        if len(scores) == size:
-            heappop(scores)
+        score = 1/distance
 
-        heappush(scores, (1/distance, phenotype['HPOId']))
+        if score > threshold:
+            scores.append((score, phenotype['HPOId']))
     
     return scores

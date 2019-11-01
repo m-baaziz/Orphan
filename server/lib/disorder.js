@@ -1,5 +1,6 @@
 const _ = require('lodash');
 const async = require('async');
+const config = require('config');
 
 const Db = require('./Db');
 
@@ -16,16 +17,25 @@ async function computeDisordersScoreMap(phenotypesWithScore, comment) {
   try {
     const scoresMap = {};
     const disordersMap = {};
+    let { frequency_factors: frequencyFactors } = config.get('scoring');
+    frequencyFactors = frequencyFactors.reduce(
+      (acc, { label, value }) => ({ ...acc, [label]: value }),
+      {}
+    );
 
     await async.eachSeries(phenotypesWithScore, async phenotypeWithScore => {
       try {
         const { HPOId, score } = phenotypeWithScore;
-        console.log('ITEM:: ', phenotypeWithScore);
         const disorders = await filterDisorders(HPOId);
         disorders.forEach(disorder => {
           const { orphaNumber } = disorder;
           disordersMap[orphaNumber] = disorder;
-          scoresMap[orphaNumber] = [...(scoresMap[orphaNumber] || []), { HPOId, score, comment }];
+          const phenotypeFrequency = _.find(disorder.phenotypes, p => p.HPOId === HPOId).frequency;
+          const frequencyRelativeScore = frequencyFactors[phenotypeFrequency] * score;
+          scoresMap[orphaNumber] = [
+            ...(scoresMap[orphaNumber] || []),
+            { HPOId, score: frequencyRelativeScore, comment }
+          ];
         });
         return Promise.resolve();
       } catch (e) {

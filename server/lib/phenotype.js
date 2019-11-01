@@ -17,10 +17,11 @@ function filterPhenotypes(parentHPOId, text) {
 }
 
 async function fetchPhenotypesWithScore(parentHPOId, statement) {
-  const { host, port, results_size: resultsSize } = config.get('nlp');
+  const { host, port } = config.get('nlp');
+  const { threshold } = config.get('scoring');
   return new Promise((resolve, reject) => {
     request.get(
-      `http://${host}:${port}/scores?search=${statement}&parentHPOId=${parentHPOId}&size=${resultsSize}`,
+      `http://${host}:${port}/scores?search=${statement}&parentHPOId=${parentHPOId}&threshold=${threshold}`,
       (error, response, body) => {
         if (response.statusCode !== 200 || error) {
           return reject(error || body);

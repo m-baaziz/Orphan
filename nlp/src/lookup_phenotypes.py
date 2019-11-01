@@ -8,7 +8,7 @@ LOGGER = logging.getLogger(__name__)
 
 app = Flask(__name__)
 
-DEFAULT_SCORES_SIZE = 10
+DEFAULT_THRESHOLD = 0
 
 @app.errorhandler(400)
 def invalid_request(e):
@@ -17,9 +17,9 @@ def invalid_request(e):
 @app.route('/scores', methods=['GET'])
 def hello_world():
     try:
-        size = int(request.args.get('size', DEFAULT_SCORES_SIZE))
+        threshold = int(request.args.get('threshold', DEFAULT_THRESHOLD))
     except Exception as e:
-        abort(400, description="invalid size parameter")
+        abort(400, description="invalid threshold parameter")
 
     search = request.args.get('search')
     parent_hpoid = request.args.get('parentHPOId')
@@ -27,7 +27,7 @@ def hello_world():
     if not search:
         abort(400, description="search parameter is missing in query string")
 
-    scores = compute_scores(parent_hpoid, search, size)
+    scores = compute_scores(parent_hpoid, search, threshold)
     scores = sorted(scores, key=lambda x: -x[0])
     scores = list(map(lambda x: {'HPOId': x[1], 'score': x[0]}, scores))
     print('SCORES: ', scores)
