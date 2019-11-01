@@ -17,7 +17,7 @@ nlp:
   host: localhost
   port: 5000
 scoring:
-  threshold: 5
+  threshold: 3
   results_size: 5
   frequency_factors:
     - label: Obligate (100%)

@@ -21,13 +21,15 @@ def sentences_distance(sentence1, sentence2):
 
 def compute_scores(parent_hpoid, search, threshold):
     scores = []
-    search_embedding = sentence_embeddings(search).tolist()
+    search_embeddings = sentence_embeddings(search).tolist()
     gen = phenotypes.find({'parents': parent_hpoid}) if parent_hpoid else phenotypes.find()
     for phenotype in phenotypes.find():
         if not phenotype['embeddings']:
             continue
-        distances = list(map(lambda x: embeddings_distance(search_embedding, x), phenotype['embeddings']))
-        distance = sum(distances)/len(distances)
+        distances = []
+        for search_embedding in search_embeddings:
+            distances += list(map(lambda x: embeddings_distance(search_embedding, x), phenotype['embeddings']))
+        distance = min(distances)
         score = 1/distance
 
         if score > threshold:
