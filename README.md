@@ -4,6 +4,16 @@
     - phenotypes (all phenotypes under selected zones, i.e phenotype_classification) 
     - phenotype_classifications to include any forgotten zone selection
 
+# Models
+
+## Phenotype
+
+### embeddings
+
+type: array
+First element -> embedding of the name
+other elements -> embeddings of the description, sentence-wise.
+
 # TODOs:
 
 - graphql client side
