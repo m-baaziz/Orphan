@@ -15,7 +15,7 @@ def invalid_request(e):
     return jsonify(error=str(e)), 400
 
 @app.route('/scores', methods=['GET'])
-def hello_world():
+def lookup_phenotypes():
     try:
         threshold = float(request.args.get('threshold', DEFAULT_THRESHOLD))
     except Exception as e:
@@ -30,7 +30,7 @@ def hello_world():
     scores = compute_scores(parent_hpoid, search, threshold)
     scores = sorted(scores, key=lambda x: -x[0])
     scores = list(map(lambda x: {'HPOId': x[1], 'score': x[0]}, scores))
-    print('SCORES: ', scores)
+    print('SCORES: ', scores[:20])
 
     return jsonify({
         'scores': scores

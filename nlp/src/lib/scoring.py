@@ -19,6 +19,11 @@ def sentences_distance(sentence1, sentence2):
                 
     return np.mean(distances)
 
+def normalize_scores(scores):
+    min_value = min(scores)[0]
+    max_value = max(scores)[0]
+    return list(map(lambda x: (100 * (x[0] - min_value) / (max_value - min_value), x[1]), scores))
+
 def compute_scores(parent_hpoid, search, threshold):
     scores = []
     search_embeddings = sentence_embeddings(search).tolist()
@@ -30,9 +35,13 @@ def compute_scores(parent_hpoid, search, threshold):
         for search_embedding in search_embeddings:
             distances += list(map(lambda x: embeddings_distance(search_embedding, x), phenotype['embeddings']))
         distance = min(distances)
-        score = 1/distance
-
-        if score > threshold:
-            scores.append((score, phenotype['HPOId']))
+        score = (1 - distance) * 100
+        scores.append((score, phenotype['HPOId']))
     
-    return scores
+    normalized_scores = normalize_scores(scores)
+    filtered_scores = []
+    for score in normalized_scores:
+        if score[0] > threshold:
+            filtered_scores.append(score)
+    
+    return filtered_scores

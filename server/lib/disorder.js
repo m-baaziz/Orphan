@@ -49,8 +49,8 @@ async function computeDisordersScoreMap(phenotypesWithScore, comment) {
 }
 
 function interStatementDisorderScoreUpdate(lastScore, keyPhenotypes) {
-  const incomingScore = _.sum(keyPhenotypes.map(({ score }) => score));
-  return lastScore + (incomingScore || 0);
+  const incomingScore = _.mean(keyPhenotypes.map(({ score }) => score));
+  return lastScore * (incomingScore || 1);
 }
 
 exports.findDisorder = findDisorder;

@@ -21,7 +21,7 @@ async function matchDisorders({ statements }) {
 
     const disordersScores = scoresMaps.reduce(
       (acc, scoresMap) => _.mergeWith(acc, scoresMap, interStatementDisorderScoreUpdate),
-      new Proxy({}, { get: (target, prop) => target[prop] || 0 })
+      new Proxy({}, { get: (target, prop) => target[prop] || 1 })
     );
 
     const sortedDisorders = _.sortBy(Object.keys(disordersScores), [
