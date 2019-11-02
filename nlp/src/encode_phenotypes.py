@@ -7,7 +7,9 @@ client = MongoClient()
 db = client.kibo
 phenotypes = db.phenotypes
 
-for phenotype in phenotypes.find():
+cursor = phenotypes.find(no_cursor_timeout=True)
+
+for phenotype in cursor:
     HPOId = phenotype['HPOId']
     name = phenotype['name']
     description = phenotype['description']
@@ -20,3 +22,5 @@ for phenotype in phenotypes.find():
             'embeddings': embeddings
         }
     })
+
+cursor.close()
