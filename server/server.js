@@ -12,6 +12,7 @@ const dev = require('./routes/dev');
 const phenotypeResolvers = require('./resolvers/phenotype');
 const disorderResolvers = require('./resolvers/disorder');
 
+const PUBLIC_PATH = path.join(__dirname, 'public');
 const { port: SERVER_PORT } = config.get('server');
 const ENV = config.get('env');
 
@@ -41,6 +42,7 @@ app
   )
   .use(bodyParser.json())
   .use(morgan('combined'))
+  .use(express.static(PUBLIC_PATH))
   .use(
     '/dev',
     ENV === 'dev'
@@ -51,6 +53,10 @@ app
   );
 
 app.use('/graphql', graphqlHTTP(graphqlOptions));
+
+app.get('*', (req, res) => {
+  res.sendFile(path.join(`${PUBLIC_PATH}/index.html`));
+});
 
 async function init() {
   try {

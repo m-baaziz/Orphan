@@ -23,7 +23,7 @@ async function fetchPhenotypesWithScore(parentHPOId, statement) {
     request.get(
       `http://${host}:${port}/scores?search=${statement}&parentHPOId=${parentHPOId}&threshold=${threshold}`,
       (error, response, body) => {
-        if (response.statusCode !== 200 || error) {
+        if ((response && response.statusCode !== 200) || error) {
           return reject(error || body);
         }
         try {

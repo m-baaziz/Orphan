@@ -1,8 +1,9 @@
+import os
 import scipy.spatial
 from pymongo import MongoClient
 from lib.encoding import sentence_embeddings
 
-client = MongoClient()
+client = MongoClient(os.getenv('DB_HOST', 'localhost'))
 db = client.kibo
 phenotypes = db.phenotypes
 

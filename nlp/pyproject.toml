@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "orphan"
+name = "server"
 version = "0.1.0"
 description = ""
 authors = ["Mohamed Baaziz <mha.baaziz@gmail.com>"]

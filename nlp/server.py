@@ -37,4 +37,4 @@ def lookup_phenotypes():
     })
 
 if __name__ == '__main__':
-    app.run()
+    app.run(os.getenv('SERVER_HOST'), os.getenv('SERVER_PORT'))
