@@ -62,3 +62,5 @@ data/orphadata filter=lfs diff=lfs merge=lfs -text
 data/db filter=lfs diff=lfs merge=lfs -text
 data/exports filter=lfs diff=lfs merge=lfs -text
 data/git_orphadata filter=lfs diff=lfs merge=lfs -text
+*.css linguist-detectable=false
+*.html linguist-detectable=false
