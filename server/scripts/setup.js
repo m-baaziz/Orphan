@@ -9,8 +9,8 @@ const {
     phenotypes: PHENOTYPES_COLLECTION,
     phenotypes_classification: PHENOTYPES_CLASSIFICATION_COLLECTION,
     disorders: DISORDERS_COLLECTION,
-    disorders_classification: DISORDERS_CLASSIFICATION_COLLECTION
-  }
+    disorders_classification: DISORDERS_CLASSIFICATION_COLLECTION,
+  },
 } = config.get('database');
 
 const url = `mongodb://${DB_HOST}:${DB_PORT}`;
@@ -19,45 +19,45 @@ const indexes = {
   [DISORDERS_COLLECTION]: [
     {
       key: { orphaNumber: 1 },
-      unique: true
+      unique: true,
     },
     {
-      key: { 'phenotypes.HPOId': 1 }
-    }
+      key: { 'phenotypes.HPOId': 1 },
+    },
   ],
   [PHENOTYPES_COLLECTION]: [
     {
       key: { HPOId: 1 },
-      unique: true
+      unique: true,
     },
     {
-      key: { name: 1 }
+      key: { name: 1 },
     },
     {
-      key: { description: 1 }
+      key: { description: 1 },
     },
     {
-      key: { parents: 1 }
-    }
+      key: { parents: 1 },
+    },
   ],
   [PHENOTYPES_CLASSIFICATION_COLLECTION]: [
     {
       key: { HPOId: 1 },
-      unique: true
+      unique: true,
     },
     {
-      key: { parents: 1 }
-    }
+      key: { parents: 1 },
+    },
   ],
   [DISORDERS_CLASSIFICATION_COLLECTION]: [
     {
       key: { orphaNumber: 1 },
-      unique: true
+      unique: true,
     },
     {
-      key: { expertLink: 1 }
-    }
-  ]
+      key: { expertLink: 1 },
+    },
+  ],
 };
 
 async function main() {
@@ -65,13 +65,13 @@ async function main() {
     console.log('initalizing db connection ...');
     const client = await MongoClient.connect(url, {
       useNewUrlParser: true,
-      useUnifiedTopology: true
+      useUnifiedTopology: true,
     });
 
     const collections = Object.keys(indexes);
 
     await Promise.all(
-      collections.map(async collectionName => {
+      collections.map(async (collectionName) => {
         console.log('creating index for collection ', collectionName);
         const collection = client.db(DB_NAME).collection(collectionName);
         return collection.createIndexes(indexes[collectionName]);

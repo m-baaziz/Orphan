@@ -1,0 +1,12 @@
+{
+  "rust.cargoPath": "/Users/tchiky/.cargo/bin/cargo",
+  "rust.cargoHomePath": "/Users/tchiky/.cargo",
+  "rust.rustfmtPath": "/Users/tchiky/.cargo/bin/rustfmt",
+  "rust.rustsymPath": "/Users/tchiky/.cargo/bin/rustsym",
+  "rust.rustLangSrcPath": "/Users/tchiky/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/src",
+  "rust.mode": "rls",
+  "rust.rls": {
+    "executable": "/Users/tchiky/.cargo/bin/rls",
+    "useRustfmt": true
+  }
+}
