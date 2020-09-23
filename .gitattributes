@@ -41,3 +41,4 @@ data/db/index-37--8438387154318998570.wt filter=lfs diff=lfs merge=lfs -text
 data/db/index-5--4396188782875233452.wt filter=lfs diff=lfs merge=lfs -text
 data/exports/disorders_classification.csv filter=lfs diff=lfs merge=lfs -text
 data/exports/phenotypes.csv filter=lfs diff=lfs merge=lfs -text
+nlp/models/bert/uncased_L-12_H-768_A-12 filter=lfs diff=lfs merge=lfs -text
