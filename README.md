@@ -11,3 +11,10 @@ docker-compose up -d
 ```
 
 visit http://localhost:8080
+
+## Missing Files
+
+Due to lack of LFS storage, some files are missing in the github repository.
+
+- nlp model files (bert)
+- structured data dumps
